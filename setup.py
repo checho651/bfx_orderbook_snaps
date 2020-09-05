@@ -39,7 +39,7 @@ setup(
     # Python versions (enforced)
     python_requires='>=3.8.0, <4',
     # deps installed by pip
-    install_requires=['pandas', 'asyncio', 'requests', 'bfxapi'],
+    install_requires=['requests', 'schedule'],
     project_urls={
         'Bug Reports': 'https://github.com/checho651/bfx_orderbook_snaps/issues',
         'Source': 'https://github.com/checho651/bfx_orderbook_snaps',
