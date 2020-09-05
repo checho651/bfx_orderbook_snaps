@@ -1,2 +1,2 @@
 # bfx_orderbook_snaps
-Store orderbook snapshots
+Store orderbook snapshots and ticker.
