@@ -20,6 +20,7 @@ def save_orderbook(symbol: str = 'fUSD'):
     """
     try:
         # Request orderbook information.
+        print("")
         print('GETTING ORDER BOOK INFORMATION')
         url = 'https://api-pub.bitfinex.com/v2/book/fUSD/P0?_full=1'
         request = requests.get(url)
@@ -85,15 +86,20 @@ def get_data():
     save_ticker('fUSD')
 
 
+print("")
+print("")
+
 # Create folders to store files in working directory.
-try:
-    os.mkdir('snapshots')
-    os.mkdir('tickers')
-    print('Folders snapshots and tickers created')
-except Exception as e:
-    print('Check if folders already exists')
-    print(e)
-    print("")
+folders_needed = ['snapshots', 'tickers']
+for folder in folders_needed:
+    try:
+        os.mkdir(folder)
+        print(f'Folder {folder} created')
+        print("")
+    except Exception as e:
+        print(f'Check if {folder} already exists')
+        print(e)
+        print("")
 
 interval = 5
 hours_on_day = [f'{i:02d}' for i in range(0, 24, 1)]  # List with hours in the day
@@ -106,7 +112,7 @@ scheduled_times = [f'{hour}:{minute}:00' for hour in hours_on_day for minute in 
 for instant in scheduled_times:
     job = schedule.every().day.at(instant).do(get_data)
     print(job)
-
+print("")
 
 # Infinite loop for running scheduled tasks.
 while True:
