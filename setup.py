@@ -10,8 +10,8 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 setup(
-    name='bitfinex-api-py',
-    version='1.0.0',
+    name='bfx_orderbook_snaps',
+    version='1.0.1',
     description='bfx ordebook snaps',
     long_description='Store orderbook snapshots from bitfinex',
     long_description_content_type='text/markdown',
