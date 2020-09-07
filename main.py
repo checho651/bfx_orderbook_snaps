@@ -26,7 +26,7 @@ def save_orderbook(symbol: str = 'fUSD'):
         full_book = request.json()  # Gets a list from full book.
 
         # Get path for the file with time information.
-        local_time = datetime.strftime(datetime.now(), format='%y-%m-%dT%H.%M')
+        local_time = datetime.strftime(datetime.utcnow(), format='%y-%m-%dT%H.%M')
         file_name = f'{symbol} {local_time}_booksnapshot.csv'
         file_path = os.path.join('snapshots', file_name)
         print(f'file_path: {file_path}')
@@ -60,7 +60,7 @@ def save_ticker(symbol: str = 'fUSD'):
         ticker[0].append(int(time.time() * 1000))
 
         # Get path for the file with time information.
-        local_time = datetime.strftime(datetime.now(), format='%y-%m-%d')
+        local_time = datetime.strftime(datetime.utcnow(), format='%y-%m-%d')
         file_name = f'{symbol} {local_time}_ticker.csv'
         file_path = os.path.join('tickers', file_name)
         print(f'file_path: {file_path}')
