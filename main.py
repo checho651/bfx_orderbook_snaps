@@ -2,7 +2,7 @@
 import csv
 from datetime import datetime
 import time
-import os.path
+import os
 
 # Third-party module or package imports.
 import requests
@@ -28,8 +28,15 @@ def save_orderbook(symbol: str = 'fUSD'):
 
         # Get path for the file with time information.
         local_time = datetime.strftime(datetime.utcnow(), format='%y-%m-%dT%H.%M')
+        dir_path = os.path.join('snapshots', local_time[:8])
+        # Checks if day folder already exists.
+        try:
+            os.makedirs(dir_path)
+            print(f'Folder {dir_path} created')
+        except:
+            pass
         file_name = f'{symbol} {local_time}_booksnapshot.csv'
-        file_path = os.path.join('snapshots', file_name)
+        file_path = os.path.join(dir_path, file_name)
         print(f'file_path: {file_path}')
 
         # Saves book information as csv.
