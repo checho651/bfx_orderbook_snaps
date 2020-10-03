@@ -10,8 +10,8 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 setup(
-    name='bitfinex-api-py',
-    version='1.0.0',
+    name='bfx_orderbook_snaps',
+    version='1.0.1',
     description='bfx ordebook snaps',
     long_description='Store orderbook snapshots from bitfinex',
     long_description_content_type='text/markdown',
@@ -39,7 +39,7 @@ setup(
     # Python versions (enforced)
     python_requires='>=3.8.0, <4',
     # deps installed by pip
-    install_requires=['pandas', 'asyncio', 'requests', 'bfxapi'],
+    install_requires=['requests', 'schedule'],
     project_urls={
         'Bug Reports': 'https://github.com/checho651/bfx_orderbook_snaps/issues',
         'Source': 'https://github.com/checho651/bfx_orderbook_snaps',
