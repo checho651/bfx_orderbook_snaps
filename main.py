@@ -28,7 +28,8 @@ def save_orderbook(symbol: str = 'fUSD'):
 
         # Get path for the file with time information.
         local_time = datetime.strftime(datetime.utcnow(), format='%y-%m-%dT%H.%M')
-        dir_path = os.path.join('snapshots', local_time[:8])
+        dir_path = os.path.join(symbol, 'snapshots', symbol + ' ' + local_time[:8])
+
         # Checks if day folder already exists.
         try:
             os.makedirs(dir_path)
@@ -70,7 +71,7 @@ def save_ticker(symbol: str = 'fUSD'):
         # Get path for the file with time information.
         local_time = datetime.strftime(datetime.utcnow(), format='%y-%m-%d')
         file_name = f'{symbol} {local_time}_ticker.csv'
-        file_path = os.path.join('tickers', file_name)
+        file_path = os.path.join(symbol, 'tickers', file_name)
         print(f'file_path: {file_path}')
 
         # Saves ticker information in csv.
@@ -84,29 +85,36 @@ def save_ticker(symbol: str = 'fUSD'):
         print(e)
 
 
-def get_data():
+def get_data(coins: list):
     """
     Merges both requests functions in order to create only one instance of schedule.Job
     :return:
     """
-    save_orderbook('fUSD')
-    save_ticker('fUSD')
+    for coin in coins:
+        save_orderbook(coin)
+        save_ticker(coin)
 
 
 print("")
 print("")
+
+# List of pairs to fetch data
+pairs = ['fUSD', 'fEUR', 'fGBP', 'fJPY', 'fUST']
 
 # Create folders to store files in working directory.
 folders_needed = ['snapshots', 'tickers']
-for folder in folders_needed:
-    try:
-        os.mkdir(folder)
-        print(f'Folder {folder} created')
-        print("")
-    except Exception as e:
-        print(f'Check if {folder} already exists')
-        print(e)
-        print("")
+for pair in pairs:
+    for folder in folders_needed:
+        try:
+            directory = os.path.join(pair, folder)
+            os.makedirs(directory)
+            print(f'Folder {directory} created')
+            print("")
+        except Exception as e:
+            print(f'Check if {directory} already exists')
+            print(e)
+            print("")
+
 
 interval = 5
 hours_on_day = [f'{i:02d}' for i in range(0, 24, 1)]  # List with hours in the day
@@ -117,9 +125,10 @@ scheduled_times = [f'{hour}:{minute}:00' for hour in hours_on_day for minute in 
 
 # Creates instances of schedule.Job class for every day tasks.
 for instant in scheduled_times:
-    job = schedule.every().day.at(instant).do(get_data)
+    job = schedule.every().day.at(instant).do(get_data,pairs)
     print(job)
 print("")
+
 
 # Infinite loop for running scheduled tasks.
 while True:
