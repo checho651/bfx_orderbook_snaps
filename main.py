@@ -99,7 +99,7 @@ print("")
 print("")
 
 # List of pairs to fetch data
-pairs = ['fUSD', 'fEUR', 'fGBP', 'fJPY', 'fUST']
+pairs = ['fUSD', 'fEUR', 'fGBP', 'fJPY', 'fUST', 'fBTC']
 
 # Create folders to store files in working directory.
 folders_needed = ['snapshots', 'tickers']
