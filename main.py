@@ -1,8 +1,9 @@
 # Standard library imports.
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import os
+import shutil
 
 # Third-party module or package imports.
 import requests
@@ -95,6 +96,32 @@ def get_data(coins: list):
         save_ticker(coin)
 
 
+def zip_data(coins: list):
+    """Creates .zip from day snapshots, erase data folder"""
+    print("")
+    today_time = datetime.utcnow()
+    yesterday_time = today_time - timedelta(days=1)
+    yesterday = datetime.strftime(yesterday_time, format='%y-%m-%d')
+
+    for coin in coins:
+        try:
+            yesterday_data_dir = os.path.join(coin, 'snapshots', coin + ' ' + yesterday)
+            output_file = os.path.join('ZIPPED_DATA', coin + ' ' + yesterday)
+            zipped_file = shutil.make_archive(
+                output_file,
+                'zip',
+                yesterday_data_dir
+            )
+            print(f'Day snapshots zipped to: {zipped_file}')
+        except Exception as e:
+            print(f'Problem at creating .zip: {e}')
+        finally:
+            try:
+                shutil.rmtree(yesterday_data_dir)  # Erase data once try statements completes without errors.
+            except Exception as e:
+                print(f'Problem at removing {yesterday_data_dir}: {e}')
+
+
 print("")
 print("")
 
@@ -115,6 +142,14 @@ for pair in pairs:
             print(e)
             print("")
 
+# Create data folder. Day zip files will be stored there.
+try:
+    os.makedirs('ZIPPED_DATA')
+except Exception as e:
+    print("Check if 'ZIPPED_DATA' already exists")
+    print(e)
+    print("")
+
 
 interval = 5
 hours_on_day = [f'{i:02d}' for i in range(0, 24, 1)]  # List with hours in the day
@@ -125,10 +160,14 @@ scheduled_times = [f'{hour}:{minute}:00' for hour in hours_on_day for minute in 
 
 # Creates instances of schedule.Job class for every day tasks.
 for instant in scheduled_times:
-    job = schedule.every().day.at(instant).do(get_data,pairs)
+    job = schedule.every().day.at(instant).do(get_data, pairs)
     print(job)
-print("")
 
+# Schedule zipping task.
+print("")
+job2 = schedule.every().day.at('00:00:10').do(zip_data, pairs)
+print(job2)
+print("")
 
 # Infinite loop for running scheduled tasks.
 while True:
