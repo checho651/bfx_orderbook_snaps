@@ -165,7 +165,7 @@ for instant in scheduled_times:
 
 # Schedule zipping task.
 print("")
-job2 = schedule.every().day.at('00:00:10').do(zip_data, pairs)
+job2 = schedule.every().day.at('05:00:10').do(zip_data, pairs)
 print(job2)
 print("")
 
