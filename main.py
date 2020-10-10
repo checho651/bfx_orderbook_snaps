@@ -8,6 +8,8 @@ import shutil
 # Third-party module or package imports.
 import requests
 import schedule
+from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 
 def save_orderbook(symbol: str = 'fUSD'):
@@ -122,6 +124,52 @@ def zip_data(coins: list):
                 print(f'Problem at removing {yesterday_data_dir}: {e}')
 
 
+def upload_files(list_dir: list):
+    """Upload files in list_dir"""
+    google_auth = GoogleAuth()
+
+    # Try to load saved client credentials
+    google_auth.LoadCredentialsFile("mycreds.txt")
+
+    if google_auth.credentials is None:
+        # Authenticate if they're not there
+        google_auth.LocalWebserverAuth()
+    elif google_auth.access_token_expired:
+        # Refresh them if expired
+        google_auth.Refresh()
+    else:
+        # Initialize the saved credentials
+        google_auth.Authorize()
+    # Save the current credentials to a file
+    google_auth.SaveCredentialsFile("mycreds.txt")
+
+    drive = GoogleDrive(google_auth)
+
+    for file_path in list_dir:
+        file = drive.CreateFile({'parents': [{'id': '1DiG_Lmc0UQxWLEWZ8CHDPQoo2Ar-m5Ib'}]})
+        file.SetContentFile(file_path)
+        file.Upload()
+        print(file)
+
+
+def upload_data(directory):
+    """Uploads to Drive all files in directory"""
+    try:
+        files_to_upload = os.listdir(directory)
+        file_paths = [os.path.join(directory, file) for file in files_to_upload]
+        upload_files(file_paths)
+    except Exception as e:
+        print(f'Files not uploaded: {e}')
+    finally:
+        for file in file_paths:
+            try:
+                os.remove(file)  # Erase data once try statements completes without errors.
+                print("")
+                print(f'Removed file: {file}')
+            except Exception as e:
+                print(f'Problem at removing {file}: {e}')
+
+
 print("")
 print("")
 
@@ -165,8 +213,14 @@ for instant in scheduled_times:
 
 # Schedule zipping task.
 print("")
-job2 = schedule.every().day.at('05:00:10').do(zip_data, pairs)
+job2 = schedule.every().day.at('05:02:30').do(zip_data, pairs)
 print(job2)
+print("")
+
+# Schedule uploading task.
+print("")
+job3 = schedule.every().day.at('05:07:30').do(upload_data, 'ZIPPED_DATA')
+print(job3)
 print("")
 
 # Infinite loop for running scheduled tasks.
