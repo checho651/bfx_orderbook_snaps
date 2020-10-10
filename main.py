@@ -25,7 +25,7 @@ def save_orderbook(symbol: str = 'fUSD'):
         # Request orderbook information.
         print("")
         print('GETTING ORDER BOOK INFORMATION')
-        url = 'https://api-pub.bitfinex.com/v2/book/fUSD/P0?_full=1'
+        url = f'https://api-pub.bitfinex.com/v2/book/{symbol}/P0?_full=1'
         request = requests.get(url)
         full_book = request.json()  # Gets a list from full book.
 
