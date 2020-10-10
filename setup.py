@@ -11,7 +11,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 setup(
     name='bfx_orderbook_snaps',
-    version='1.0.2',
+    version='1.0.3',
     description='bfx ordebook snaps',
     long_description='Store orderbook snapshots from bitfinex',
     long_description_content_type='text/markdown',
