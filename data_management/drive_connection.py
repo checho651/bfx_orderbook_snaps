@@ -64,6 +64,7 @@ def upload_files(drive: GoogleDrive, folder_id: str, files_dir: str):
         for file in file_paths:
             drive_file = drive.CreateFile({'parents': [{'id': folder_id}]})
             drive_file.SetContentFile(file)
+            drive_file['title'] = os.path.basename(file)
             drive_file.Upload()
             print(f'File uploaded: {drive_file}')
             os.remove(file)
