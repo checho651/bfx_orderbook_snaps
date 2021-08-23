@@ -8,7 +8,7 @@ import csv
 import requests
 
 
-def save_orderbook(symbol: str, root_dir: str):
+def save_orderbook(symbol: str, precision: str, root_dir: str):
     """
     Save orderbook for currency selected as csv.
     File will be saved in snapshots directory of symbol selected in root_dir.
@@ -16,11 +16,12 @@ def save_orderbook(symbol: str, root_dir: str):
 
     :param root_dir: where local data will be store during current day.
     :param symbol: symbol with type prefix ('fUSD').
+    :param precision: level of price aggregation ('P0' to 'P4'. 'R0' for raw) 
     :return: None
     """
     try:
         # Request orderbook information.
-        url = f'https://api-pub.bitfinex.com/v2/book/{symbol}/P0?_full=1'
+        url = f'https://api-pub.bitfinex.com/v2/book/{symbol}/{precision}?_full=1'
         request = requests.get(url)
         full_book = request.json()  # Gets a list from full book.
 
