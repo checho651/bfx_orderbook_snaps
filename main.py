@@ -20,7 +20,11 @@ def get_bfx_data(user: snap_user.SnapUser):
     :return:
     """
     for coin in user.pairs:
-        public_endpoints.save_orderbook(symbol=coin, root_dir=user.data_dir)
+        public_endpoints.save_orderbook(
+            symbol=coin,
+            precision=user.precision,
+            root_dir=user.data_dir
+        )
         public_endpoints.save_ticker(symbol=coin, root_dir=user.data_dir)
     print("")
 

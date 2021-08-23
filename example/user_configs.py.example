@@ -7,6 +7,7 @@ class Parameters:
     def __init__(self):
         # General parameters
         self.pairs = ['fUSD', 'fEUR', 'fGBP', 'fJPY', 'fUST', 'fBTC']
+        self.precision = 'R0'
         self.interval = 5  # Minutes within snapshots/tickers created.
         self.zipping_time = '05:01:00'  # When to zip yesterday book snapshots.
         self.moving_time = '05:06:00'  # When to locally move yesterday tickers.
